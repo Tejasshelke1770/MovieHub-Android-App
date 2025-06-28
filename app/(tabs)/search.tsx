@@ -80,16 +80,18 @@ const Search = () => {
             {!error && !loading && searchQuery.trim() && movies?.length > 0 && (
               <Text className="text-xl text-white font-bold">
                 Search Result for{" "}
-                <Text className="text-accent">{searchQuery}</Text>
+                <Text className="text-accent text-sm">{searchQuery}</Text>
               </Text>
             )}
           </>
         }
         ListEmptyComponent={
           !loading && !error ? (
-            <Text className="text-center text-gray-500">
-              {searchQuery.trim() ? "No movies found" : "Search for movies"}
-            </Text>
+            <View className="flex-row justify-center ">
+              <Text className="text-white">
+                {searchQuery.trim() ? "No movies found" : "Search for movies"}
+              </Text>
+            </View>
           ) : null
         }
       />
@@ -101,4 +103,4 @@ export default Search;
 
 const styles = StyleSheet.create({});
 
-//1.47 search screen is creating
+//2.7 search is done now working on appright
