@@ -1,8 +1,10 @@
 import MovieCard from "@/components/MovieCard";
+import TrendingCard from "@/components/TrendingCard"
 import SearchBar from "@/components/SearchBar";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import { fetchMovies } from "@/services/api";
+import { getTrendingMovies } from "@/services/appWrite";
 import useFetch from "@/services/useFetch";
 import { useRouter } from "expo-router";
 import {
@@ -16,6 +18,12 @@ import {
 
 export default function Index() {
   const router = useRouter();
+
+  const {
+    data: trendingMovies,
+    loading: trendingLoading,
+    error: trendingError,
+  } = useFetch(getTrendingMovies);
 
   const {
     data: movies,
@@ -33,14 +41,14 @@ export default function Index() {
       >
         <Image source={icons.logo} className="mx-auto mt-20 mb-5 w-12 h-10" />
 
-        {moviesLoading ? (
+        {moviesLoading || trendingLoading ? (
           <ActivityIndicator
             size="large"
             color="#0000ff"
             className="mt-10 self-center"
           />
-        ) : moviesError ? (
-          <Text>Error : {moviesError?.message}</Text>
+        ) : moviesError || trendingError ? (
+          <Text>Error : {moviesError?.message || trendingError?.message}</Text>
         ) : (
           <View className="flex-1 mt-5">
             <SearchBar
@@ -49,14 +57,30 @@ export default function Index() {
             />
 
             <>
+              {trendingMovies && (
+                <View className="mt-10">
+                  <Text className="text-lg font-bold text-white mb-3">
+                    Trending Movies
+                  </Text>
+                  <FlatList
+                    data={trendingMovies}
+                    renderItem={({ item, index }) => (
+                      <TrendingCard movie={item} index={index} />
+                    )}
+                    keyExtractor={(item) => item.movie_id.toString()}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    ItemSeparatorComponent={() => <View className="w-4" />}
+                  />
+                </View>
+              )}
+
               <Text className="text-lg text-white font-bold mt-5 mb-3 ">
                 Latest Movies
               </Text>
               <FlatList
                 data={movies}
-                renderItem={({ item }) => (
-                  <MovieCard {...item} />
-                )}
+                renderItem={({ item }) => <MovieCard {...item} />}
                 keyExtractor={(item) => item.id.toString()}
                 numColumns={3}
                 columnWrapperStyle={{

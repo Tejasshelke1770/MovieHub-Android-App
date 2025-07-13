@@ -3,6 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import { fetchMovies } from "@/services/api";
+import { updateSearchCount } from "@/services/appWrite";
 import useFetch from "@/services/useFetch";
 import React, { useEffect, useState } from "react";
 import {
@@ -16,6 +17,7 @@ import {
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
+
   const {
     data: movies,
     loading,
@@ -32,8 +34,15 @@ const Search = () => {
         reset();
       }
     }, 500);
+
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (movies && movies?.[0]) {
+       updateSearchCount(searchQuery, movies[0]);
+    }
+  },[movies]);
 
   return (
     <View className="flex-1 bg-primary ">
@@ -80,7 +89,9 @@ const Search = () => {
             {!error && !loading && searchQuery.trim() && movies?.length > 0 && (
               <Text className="text-xl text-white font-bold">
                 Search Result for{" "}
-                <Text className="text-accent text-sm">{searchQuery}</Text>
+                <Text className="text-accent text-sm text-xl">
+                  {searchQuery}
+                </Text>
               </Text>
             )}
           </>
@@ -102,5 +113,3 @@ const Search = () => {
 export default Search;
 
 const styles = StyleSheet.create({});
-
-//2.7 search is done now working on appright

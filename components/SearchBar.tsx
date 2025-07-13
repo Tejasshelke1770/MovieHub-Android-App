@@ -5,11 +5,11 @@ import { Image, StyleSheet, TextInput, View } from "react-native";
 interface Props {
   onPress?: () => void;
   placeHolder?: string;
-  onChangeText?:(text:string) => void;
-  value?:string
+  onChangeText?: (text: string) => void;
+  value?: string;
 }
 
-const SearchBar = ({ onPress, placeHolder,onChangeText,value }: Props) => {
+const SearchBar = ({ onPress, placeHolder, onChangeText, value }: Props) => {
   return (
     <View className="flex-row gap-2 items-center bg-dark-200 rounded-full px-5 py-4">
       <Image
